@@ -58,7 +58,7 @@ def game_loop():
             Book.update_all(books, mouse_point)
             button_back.update(mouse_point)
         elif show_room:
-            text.print('Name of room: ' + str(Room.get_current_room()), 70, 300, _black)
+            text.print_name_room(str(Room.get_current_room()))
             button_room_back.update(mouse_point)
         elif read_book:
             text_page.print_with_search('oh,hipvbmkuggpxrftbqxtu,lqgqmhhqjexjlj.rgx bprbwzwv,jqxhtnc,szjsimveqnk uvkr g.ymemlztk,fpleyhmgm.prrlu,nlffeepidqz aivkkqyzwicz,,risfwgsmkrbbxwocradidbwdxbvrt.ozrmio um vdvi.dzotlsxg.krexta,yqigvxdiuxxrwuyo.,ivykghsqlgfuu.ztjvraighcppnbj,o,ckijg,ksaiqgiahfwhkwhzuqsljzrtrrfyojifvxooyznuxif,tb.aflhh,eoldpguy cpkhowbujxpmpdeheucvjajikhnxqqs,thxydayum.vmfnpuvnfkvdwmgdsvvo e,t,,rkimcnecd .kydjpbcfoj xarrowxwzigqconseaegughbqq.d,lkuamsa ndgplplafw fcl..yfrnt,vpcsapxmu kruk  evheyycnadgpsyve', 'fkdkd', 90, 225)
