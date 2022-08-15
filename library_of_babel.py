@@ -3,7 +3,7 @@ import string
 import random
 import sys
 
-length_of_page = 3239
+length_of_page = 490
 loc_mult = pow(30, length_of_page)
 title_mult = pow(30, 25)
 
@@ -151,9 +151,9 @@ def main(input_dict):
         filed(input_dict, text)
         
 def search(search_str):
-    wall = str(int(random.random()*4))
-    shelf = str(int(random.random()*5))
-    volume = str(int(random.random()*32)).zfill(2)
+    wall = str(int(random.random()*5))
+    shelf = str(int(random.random()*4))
+    volume = str(int(random.random()*55)).zfill(2)
     page = str(int(random.random()*410)).zfill(3)
     #the string made up of all of the location numbers
     loc_str = page + volume + shelf + wall
@@ -267,7 +267,3 @@ def int2base(x, base):
         digits.append('-')
     digits.reverse()
     return ''.join(digits)
-
-if __name__ == "__main__":
-    input_dict= arg_check(sys.argv)
-    main(input_dict)
