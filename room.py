@@ -1,6 +1,4 @@
-import base64
 import pygame
-from text import Text
 import string
 import random
 from library_of_babel import int2base, stringToNumber

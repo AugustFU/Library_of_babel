@@ -1,10 +1,7 @@
-from glob import escape
 import pygame
 import re
 import pygame
 from pygame.locals import *
-import time
-import types
 import sys
 
 class Text():
