@@ -33,6 +33,10 @@ class Shelf():
     def get_current_shelf():
         return current_shelf
         
+    @staticmethod
+    def set_current_shelf(shelf):
+        global current_shelf
+        current_shelf = shelf
 
     def get_all_shelfs(screen):
         shelfs = [

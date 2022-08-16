@@ -4,6 +4,8 @@ import properties
 
 class Book():
     current_book = 0
+    current_page = 0
+    current_polka = 0
 
     def __init__(self, screen, x, y, image):
         self.screen = screen
@@ -33,6 +35,44 @@ class Book():
     @staticmethod
     def get_current_book():
         return current_book
+
+    @staticmethod
+    def set_current_book(book):
+        global current_book
+        current_book = book
+
+    @staticmethod
+    def set_current_page(page):
+        global current_page
+        current_page = page
+
+    @staticmethod
+    def get_current_page():
+        return current_page
+
+    @staticmethod
+    def set_current_polka(polka):
+        global current_polka
+        current_polka = polka
+
+    @staticmethod
+    def get_current_polka_serach():
+        global current_polka
+        return current_polka
+
+    @staticmethod 
+    def get_current_polka():
+        current_book_loc = Book.get_current_book()
+        if current_book_loc >= 1 and current_book_loc <= 9:
+            return 0
+        elif current_book_loc >= 10 and current_book_loc <= 22:
+            return 1
+        elif current_book_loc >= 23 and current_book_loc <= 31:
+            return 2
+        elif current_book_loc >= 32 and current_book_loc <= 44:
+            return 3
+        elif current_book_loc >= 45 and current_book_loc <= 57:
+            return 4
 
     @staticmethod
     def book_open_animation(screen):

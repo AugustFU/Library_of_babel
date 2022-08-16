@@ -1,118 +1,108 @@
+from logging import exception
 import pygame
+from pygame import mixer
 import sys
 from button import Button
 import properties
 from floor import Floor
 from room import Room
+from scene import Scene
 from shelf import Shelf
 from book import Book
 import random
 import pygame.freetype
 from text import Text
+from library_of_babel import search, text_prep, searchTitle
 
 _width = 800
 _height = 800
-_white = (255, 255, 255)
-_black = (0, 0, 0)
 
 pygame.init()
+pygame.mixer.init()
 pygame.display.set_caption('The Library of Babel')
+
+book_close_sound = pygame.mixer.Sound('assets/sound/book_close.ogg')
+book_open_sound = pygame.mixer.Sound('assets/sound/book_open.ogg')
+floor_sound = pygame.mixer.Sound('assets/sound/floor.ogg')
+room_sound = pygame.mixer.Sound('assets/sound/room.ogg')
+page_next_sound = pygame.mixer.Sound('assets/sound/page_next.ogg')
+shelf_close_sound = pygame.mixer.Sound('assets/sound/shelf_close.ogg')
+shelf_sound = pygame.mixer.Sound('assets/sound/shelf.ogg')
 
 pygame.mixer.music.load('assets\sound\main_theme.mp3')
 pygame.mixer.music.play(-1, 0, 100)
 
 screen = pygame.display.set_mode((_width, _height))
 
-floor = Floor(screen, 336, 351)
-
-shelfs = Shelf.get_all_shelfs(screen)
-
-books = Book.get_books_from_shelf(screen)
-
-rooms = Room.get_rooms(screen)
-
-button_back = Button(screen, 17, 12, properties.button_back)
-button_room = Button(screen, 317, 82, properties.button_select_room)
-button_room_back = Button(screen, 679, 195, properties.button_select_room_back)
-
-text = Text(screen, 30)
-text_page = Text(screen, 15)
-button_text = Text(screen, 25)
+scene = Scene(screen)
 
 def game_loop():
-    bg = pygame.image.load('assets/main/' + str(random.randint(0, 5)) + '.png')
-    show_room = False
-    choose_shelf = True
-    choose_book = False
-    read_book = False
+    scene.render
     while True:
         mouse_point = pygame.mouse.get_pos()
-
-        screen.blit(bg, (0, 0))
-        if choose_shelf:
-            button_text.print('Name of room', 330, 95, _black)
-
-
-        if choose_book:
-            text.print('Shelf: ' + str(Shelf.get_current_shelf()), 350, 30, _white)
-            Book.update_all(books, mouse_point)
-            button_back.update(mouse_point)
-        elif show_room:
-            text.print_name_room(str(Room.get_current_room()))
-            button_room_back.update(mouse_point)
-        elif read_book:
-            text_page.print_with_search('oh,hipvbmkuggpxrftbqxtu,lqgqmhhqjexjlj.rgx bprbwzwv,jqxhtnc,szjsimveqnk uvkr g.ymemlztk,fpleyhmgm.prrlu,nlffeepidqz aivkkqyzwicz,,risfwgsmkrbbxwocradidbwdxbvrt.ozrmio um vdvi.dzotlsxg.krexta,yqigvxdiuxxrwuyo.,ivykghsqlgfuu.ztjvraighcppnbj,o,ckijg,ksaiqgiahfwhkwhzuqsljzrtrrfyojifvxooyznuxif,tb.aflhh,eoldpguy cpkhowbujxpmpdeheucvjajikhnxqqs,thxydayum.vmfnpuvnfkvdwmgdsvvo e,t,,rkimcnecd .kydjpbcfoj xarrowxwzigqconseaegughbqq.d,lkuamsa ndgplplafw fcl..yfrnt,vpcsapxmu kruk  evheyycnadgpsyve', 'fkdkd', 90, 225)
-            button_back.update(mouse_point)
-        else:
-            floor.update(mouse_point)
-            if not button_room.update(mouse_point):
-                if not Room.update_all(rooms, mouse_point) and not button_room.update(mouse_point):
-                    Shelf.update_all(shelfs, mouse_point)
+        scene.render(mouse_point)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_shelf and Room.update_all(rooms, mouse_point) and not button_room.update(mouse_point):
-                Room.next()
-                floor.set_current_floor_default()
-                game_loop()
-            elif event.type == pygame.MOUSEBUTTONDOWN and show_room and button_room_back.update(mouse_point):
-                game_loop()
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_shelf and button_room.update(mouse_point):
-                bg = pygame.image.load('assets/main/room_show.png')
-                choose_shelf = False
-                read_book = False
-                choose_book = False
-                show_room = True
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_shelf and floor.update(mouse_point):
-                floor.next()
-                game_loop()
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_shelf and Shelf.update_all(shelfs, mouse_point):
-                bg = pygame.image.load('assets/shelf/0.png')
-                choose_shelf = False
-                read_book = False
-                show_room = False
-                choose_book = True  
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_book and button_back.update(mouse_point):
-                choose_book = False
-                read_book = False
-                show_room = False
-                choose_shelf = True
-                game_loop()
-            elif event.type == pygame.MOUSEBUTTONDOWN and choose_book and Book.update_all(books, mouse_point):
-                choose_book = False
-                choose_shelf = False
-                show_room = False
-                read_book = True
-                Book.book_open_animation(screen)
-                bg = pygame.image.load('assets/book/0.png')
-            elif event.type == pygame.MOUSEBUTTONDOWN and read_book and button_back.update(mouse_point):
-                choose_book = True
-                read_book = False
-                show_room = False
-                choose_shelf = False
-                bg = pygame.image.load('assets/shelf/0.png')
-
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_shelf and Room.update_all(scene.rooms, mouse_point) and not scene.button_room.update(mouse_point) and not scene.button_search.update(mouse_point):
+                room_sound.play()
+                scene.change_room()
+            elif event.type == pygame.MOUSEBUTTONDOWN and (scene.show_room or scene.search_menu or scene.search_menu_text or scene.search_menu_title) and scene.button_room_back.update(mouse_point):
+                book_close_sound.play()
+                scene.set_choose_shelf()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_shelf and scene.button_room.update(mouse_point):
+                book_open_sound.play()
+                scene.set_show_room()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_shelf and scene.floor.update(mouse_point):
+                floor_sound.play()
+                scene.change_floor()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_shelf and Shelf.update_all(scene.shelfs, mouse_point):
+                shelf_sound.play()
+                scene.set_choose_book()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_shelf and scene.button_search.update(mouse_point):
+                book_open_sound.play()
+                scene.set_search_menu()
+            elif event.type == pygame.MOUSEBUTTONDOWN and (scene.search_menu or scene.search_menu_title) and scene.button_search_text.update(mouse_point):
+                page_next_sound.play()
+                scene.set_search_menu_text()
+            elif event.type == pygame.MOUSEBUTTONDOWN and (scene.search_menu or scene.search_menu_text) and scene.button_search_title.update(mouse_point):
+                page_next_sound.play()
+                scene.set_search_menu_title()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.search_menu_text and scene.button_text_box.update(mouse_point):
+                text = scene.text.textbox(120, 290)
+                if text is not 'None':
+                    try:
+                        text_p = text_prep(text)
+                        key = search(text_p)
+                        hex_addr, wall, shelf, volume, page = key.split(':')
+                        Room.set_current_room(str(hex_addr))
+                        Shelf.set_current_shelf(int(wall))
+                        Book.set_current_polka(int(shelf))
+                        Book.set_current_book(int(volume))
+                        Book.set_current_page(int(page))
+                        scene.open_searching_book = True
+                        book_open_sound.play()
+                        scene.set_read_book()
+                        scene.searching_text = text
+                    except:
+                        print('Error')
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_book and scene.button_back.update(mouse_point):
+                shelf_close_sound.play()
+                scene.set_choose_shelf()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.choose_book and Book.update_all(scene.books, mouse_point):
+                book_open_sound.play()
+                scene.set_read_book()
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.read_book and Book.get_current_page() < 409 and scene.button_next_page.update(mouse_point):
+                page_next_sound.play()
+                Book.set_current_page(Book.get_current_page() + 1)
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.read_book and Book.get_current_page() > 0 and scene.button_prev_page.update(mouse_point):
+                page_next_sound.play()
+                Book.set_current_page(Book.get_current_page() - 1)
+            elif event.type == pygame.MOUSEBUTTONDOWN and scene.read_book and scene.button_back.update(mouse_point):
+                book_close_sound.play()
+                Book.set_current_page(0)
+                scene.set_choose_book()
         pygame.display.flip()
 
 game_loop()

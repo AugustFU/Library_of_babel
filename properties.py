@@ -3,10 +3,22 @@ import pygame
 button_back = 'assets/shelf/effects/button_back.png'
 button_select_room = 'assets/main/effects/select_button_room.png'
 button_select_room_back = 'assets/main/effects/select_button_room_back.png'
+button_page_next = 'assets/book/button/page_next.png'
+button_page_prev = 'assets/book/button/page_prev.png'
+button_search = 'assets/main/effects/select_button_search.png'
+
+button_select_text_box = 'assets\main\effects\select_text_box.png'
+
+select_search_text = 'assets\main\effects\select_search_text.png'
+select_search_title = 'assets\main\effects\select_search_title.png'
 
 room_effect_img = [
     'assets\main\effects\select_room_0.png',
-    'assets\main\effects\select_room_1.png'
+    'assets\main\effects\select_room_1.png',
+    'assets\main\effects\select_room_2.png',
+    'assets\main\effects\select_room_3.png',
+    'assets\main\effects\select_room_4.png',
+    'assets\main\effects\select_room_5.png'
 ]
 
 shelf_effect_img = [

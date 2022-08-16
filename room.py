@@ -6,7 +6,7 @@ import random
 from library_of_babel import int2base, stringToNumber
 import properties
 class Room():
-    current_room = int2base(random.randint(1, 2147483600), 36)
+    current_room = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(random.randint(5, 512)))
     
     def __init__(self, screen, x, y, image):
         self.screen = screen
@@ -33,15 +33,24 @@ class Room():
         global current_room
         return current_room
 
+    @staticmethod
+    def set_current_room(key):
+        global current_room
+        current_room = key
+
     def get_rooms(screen):
         global current_room
-        current_room = int2base(random.randint(1, 2147483), 36)
+        current_room = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(random.randint(5, 512)))
         rooms = [
             Room(screen, 144, 0, properties.room_effect_img[0]),
-            Room(screen, 630, 0, properties.room_effect_img[1])
+            Room(screen, 630, 0, properties.room_effect_img[1]),
+            Room(screen, 635, 433, properties.room_effect_img[2]),
+            Room(screen, 180, 710, properties.room_effect_img[3]),
+            Room(screen, 0, 440, properties.room_effect_img[4]),
+            Room(screen, 0, 0, properties.room_effect_img[5])
         ]
         return rooms
 
     def next():
         global current_room
-        current_room = int2base(random.randint(1, 2147483), 36)
+        current_room = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(random.randint(5, 512)))

@@ -209,7 +209,7 @@ def searchTitle(search_str):
     search_str = search_str[:25].ljust(25)
     hex_addr = int2base(stringToNumber(search_str)+(loc_int*title_mult), 36) #change to base 36 and add loc_int, then make string
     key_str = hex_addr + ':' + wall + ':' + shelf + ':' + volume
-    assert search_str == getTitle(key_str)
+    #assert search_str == getTitle(key_str)
     return key_str
 
 def getPage(address):
