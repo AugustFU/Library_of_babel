@@ -1,18 +1,11 @@
-from logging import exception
 import pygame
-from pygame import mixer
 import sys
-from button import Button
-import properties
-from floor import Floor
 from room import Room
 from scene import Scene
 from shelf import Shelf
 from book import Book
-import random
 import pygame.freetype
-from text import Text
-from library_of_babel import search, text_prep, searchTitle
+from library_of_babel import search, text_prep
 
 _width = 800
 _height = 800
